@@ -12,7 +12,7 @@ app.get("*", (req, res) => {
     console.log(req.path);
     console.log(path.extname(req.path));
     if (path.extname(req.path) !== ".html") {
-        res.status(404).send("<title>404!!!</title>OwO!!! Sowwy wequested page not found!");
+        fourOuFour(res);
     } else {
         const newPath = path.join(__dirname + "/public" + req.path);
         console.log(newPath);
@@ -20,11 +20,15 @@ app.get("*", (req, res) => {
             if (exists) {
                 res.sendFile(newPath);
             } else {
-                res.status(404).send("<title>404!!!</title>OwO!!! Sowwy wequested page not found!");
+                fourOuFour(res);
             }
         });
     }
 });
+
+const fourOuFour = (res:  express.Response) => {
+    res.status(404).send("<title>OnO 404!!!</title>OwO!!! Sowwy wequested page not found!");
+};
 
 app.listen(port, () => {
     console.log(`App is listening on port ${port.toString()}!`);
