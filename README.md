@@ -1,3 +1,5 @@
 Usage:
 
+install dependencies
+
 gulp
