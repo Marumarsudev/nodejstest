@@ -1,24 +1,20 @@
-import express = require("express");
 import path = require("path");
 import fs = require("fs");
-import { area } from "./circle";
+import http = require("http");
 
 const port: number = 3000;
 
-// Create a new express app instance
-const app: express.Application = express();
-
-app.get("*", (req, res) => {
-    console.log(req.path);
-    console.log(path.extname(req.path));
-    if (path.extname(req.path) !== ".html") {
+const server = http.createServer((req, res) => {
+    console.log(req.url);
+    console.log(path.extname(req.url as string));
+    if (path.extname(req.url as string) !== ".html" || req.method as string !== "GET") {
         fourOuFour(res);
     } else {
-        const newPath = path.join(__dirname + "/public" + req.path);
+        const newPath = path.join(__dirname + "/public" + req.url as string);
         console.log(newPath);
         fs.exists(newPath, (exists) => {
             if (exists) {
-                res.sendFile(newPath);
+                fs.createReadStream(newPath).pipe(res);
             } else {
                 fourOuFour(res);
             }
@@ -26,10 +22,11 @@ app.get("*", (req, res) => {
     }
 });
 
-const fourOuFour = (res:  express.Response) => {
-    res.status(404).send("<title>OnO 404!!!</title>OwO!!! Sowwy wequested page not found!");
-};
-
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App is listening on port ${port.toString()}!`);
 });
+
+const fourOuFour = (res:  http.ServerResponse) => {
+    res.statusCode = 404;
+    res.end("<title>OnO 404!!!</title>OwO!!! Sowwy wequested page not found!");
+};
